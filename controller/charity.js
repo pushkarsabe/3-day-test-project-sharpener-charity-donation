@@ -63,7 +63,7 @@ exports.postAddnewCharity = async (req, res, next) => {
             date: date,
             fundraiserName: fundraiserName,
             storyForFundraising: storyForFundraising,
-            userId: req.userId
+            userId: req.user.id
         });
 
         if (!newCharity) {
@@ -71,7 +71,7 @@ exports.postAddnewCharity = async (req, res, next) => {
         }
         console.log("charity uuid = ", newCharity.uuid);//registration id
 
-        res.status(500).json({ message: 'charity craeted', newCharity: newCharity })
+        res.status(200).json({ message: 'charity created', newCharity: newCharity })
     } catch (err) {
         console.log("post add charity error = ", err);
         res.status(500).json({
@@ -82,9 +82,12 @@ exports.postAddnewCharity = async (req, res, next) => {
 
 exports.getCharityData = async (req, res) => {
     try {
+        let userid = req.params.id;
+        console.log("getCharityData userid = ", userid);
         let singleCharityData = await Charity.findAll({
-            where: { userId: req.userid }
+            where: { id: userid }
         });
+        // console.log("gsingleCharityData = ", singleCharityData);
         res.status(200).json({ message: 'success', singleCharityData: singleCharityData });
     }
     catch (err) {
@@ -106,8 +109,22 @@ exports.getAllCharityData = async (req, res) => {
 
 exports.updateCharity = async (req, res) => {
     try {
-        const userid = req.userid;
+        const userid = req.params.id;
+        console.log("updateCharity...userid = ", userid);
         const { category, beneficiary, beneficiaryName, relation, funds, hospitalName, hospitalLocationState, hospitalLocationCity, medicalCondition, hospitalisationStatus, date, fundraiserName, storyForFundraising } = req.body;
+        console.log('category = ' + category);
+        console.log('beneficiary = ' + beneficiary);
+        console.log('beneficiaryName = ' + beneficiaryName);
+        console.log('relation = ' + relation);
+        console.log('funds = ' + funds);
+        console.log('hospitalName = ' + hospitalName);
+        console.log('hospitalLocationState = ' + hospitalLocationState);
+        console.log('hospitalLocationCity = ' + hospitalLocationCity);
+        console.log('medicalCondition = ' + medicalCondition);
+        console.log('hospitalisationStatus = ' + hospitalisationStatus);
+        console.log('date = ' + date);
+        console.log('fundraiserName = ' + fundraiserName);
+        console.log('storyForFundraising = ' + storyForFundraising);
 
         let charity = await Charity.findOne({ where: { id: userid } });
 
@@ -127,7 +144,7 @@ exports.updateCharity = async (req, res) => {
         if (medicalCondition) updatedData.medicalCondition = medicalCondition;
         if (hospitalisationStatus) updatedData.hospitalisationStatus = hospitalisationStatus;
         if (date) updatedData.date = date;
-        if (fundraiserName) upfundraiserNamedData.fundraiserName = fundraiserName;
+        if (fundraiserName) updatedData.fundraiserName = fundraiserName;
         if (storyForFundraising) updatedData.storyForFundraising = storyForFundraising;
 
         await charity.update(updatedData);
@@ -146,14 +163,15 @@ exports.updateCharity = async (req, res) => {
 exports.getCharityByCategory = async (req, res) => {
     try {
         let catgoryName = req.params.categoryName;
-        let charityBylocation = await Charity.findAll({
+        console.log("getCharityByCategory catgoryName = ", catgoryName);
+        let charityByCategory = await Charity.findAll({
             where: { category: catgoryName }
         });
-        res.status(200).json({ message: 'success', charityBylocation: charityBylocation });
+        res.status(200).json({ message: 'success', charityByCategory: charityByCategory });
     }
     catch (err) {
-        console.error('Error fetching charity data by location:', err);
-        res.status(500).json({ message: 'Failed to get all charity data by location' });
+        console.error('Error fetching charity data by categpry:', err);
+        res.status(500).json({ message: 'Failed to get charity data by category' });
     }
 }
 
@@ -163,10 +181,10 @@ exports.getCharityByLocation = async (req, res) => {
         let charityBylocation = await Charity.findAll({
             where: { beneficiaryLocationCity: charityLocation }
         });
-        res.status(200).json({ message: 'success', charityByCategory: charityByCat });
+        res.status(200).json({ message: 'success', charityBylocation: charityBylocation });
     }
     catch (err) {
         console.error('Error fetching charity data by category:', err);
-        res.status(500).json({ message: 'Failed to get all charity data by category' });
+        res.status(500).json({ message: 'Failed to get  charity data by location' });
     }
 }
