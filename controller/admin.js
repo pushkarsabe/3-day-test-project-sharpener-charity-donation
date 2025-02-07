@@ -106,7 +106,27 @@ exports.deleteUser = async (req, res) => {
     }
 }
 
-exports.deleteCharity = async (req, res) => {
+exports.acceptCharity = async (req, res) => {
+    try {
+        let charityId = req.params.registrationId;
+        let singleCharityData = await Charity.findAll({
+            where: { uuid: charityId }
+        });
+        if (!singleCharityData) {
+            return res.status(500).json({ message: 'charity not found' });
+        }
+        //update the column
+        await singleCharityData.update({ isApproved: true });
+
+        res.status(200).json({ message: 'Charity accepted successfully', singleCharityData: singleCharityData });
+    }
+    catch (err) {
+        console.error('Error fetching charity data:', err);
+        res.status(500).json({ message: 'Failed to accepte charity' });
+    }
+}//acceptCharity
+
+exports.rejectCharity = async (req, res) => {
     try {
         let charityId = req.params.registrationId;
         let singleCharityData = await Charity.findAll({
@@ -118,10 +138,10 @@ exports.deleteCharity = async (req, res) => {
         //update the column
         await singleCharityData.update({ isApproved: false });
 
-        res.status(200).json({ message: 'Charity marked as deleted successfully', singleCharityData: singleCharityData });
+        res.status(200).json({ message: 'Charity accepted successfully', singleCharityData: singleCharityData });
     }
     catch (err) {
         console.error('Error fetching charity data:', err);
-        res.status(500).json({ message: 'Failed to delete charity' });
+        res.status(500).json({ message: 'Failed to accepte charity' });
     }
-}
+}//acceptCharity

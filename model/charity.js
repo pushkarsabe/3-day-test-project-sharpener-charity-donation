@@ -99,7 +99,7 @@ const Charity = sequelize.define('charity', {
     },
     isApproved: {
         type: Sequelize.BOOLEAN,
-        defaultValue: true,
+        defaultValue: false,
     },
 
 });
