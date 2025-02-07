@@ -90,7 +90,8 @@ function generateWebToken(id) {
 exports.deleteUser = async (req, res) => {
     try {
         let userEmail = req.params.email;
-        let singleUserData = await User.findAll({
+        console.log('deleteUser userEmail = ' + userEmail);
+        let singleUserData = await User.findOne({
             where: { email: userEmail }
         });
         if (!singleUserData) {
@@ -109,7 +110,7 @@ exports.deleteUser = async (req, res) => {
 exports.acceptCharity = async (req, res) => {
     try {
         let charityId = req.params.registrationId;
-        let singleCharityData = await Charity.findAll({
+        let singleCharityData = await Charity.findOne({
             where: { uuid: charityId }
         });
         if (!singleCharityData) {
@@ -129,7 +130,7 @@ exports.acceptCharity = async (req, res) => {
 exports.rejectCharity = async (req, res) => {
     try {
         let charityId = req.params.registrationId;
-        let singleCharityData = await Charity.findAll({
+        let singleCharityData = await Charity.findOne({
             where: { uuid: charityId }
         });
         if (!singleCharityData) {
@@ -138,10 +139,10 @@ exports.rejectCharity = async (req, res) => {
         //update the column
         await singleCharityData.update({ isApproved: false });
 
-        res.status(200).json({ message: 'Charity accepted successfully', singleCharityData: singleCharityData });
+        res.status(200).json({ message: 'Charity rejected successfully', singleCharityData: singleCharityData });
     }
     catch (err) {
         console.error('Error fetching charity data:', err);
-        res.status(500).json({ message: 'Failed to accepte charity' });
+        res.status(500).json({ message: 'Failed to reject charity' });
     }
 }//acceptCharity

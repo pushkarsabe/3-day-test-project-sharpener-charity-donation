@@ -10,12 +10,12 @@ router.post('/signup', adminController.postAddSignup);
 router.post('/login', adminController.postLogin);
 
 //admin can delete user 
-router.post('/manageUser-delete/:email', auth.authenticate, adminController.deleteUser);
+router.post('/manageUser-delete/:email', adminController.deleteUser);
 
 //admin can accept charity registration 
-router.post('/manageCharity-accept/:registrationId', auth.authenticate, adminController.acceptCharity);
+router.post('/manageCharity-accept/:registrationId', adminController.acceptCharity);
 
 //admin can reject charity registration 
-router.post('/manageCharity-reject/:registrationId', auth.authenticate, adminController.rejectCharity);
+router.post('/manageCharity-reject/:registrationId', adminController.rejectCharity);
 
 module.exports = router;
