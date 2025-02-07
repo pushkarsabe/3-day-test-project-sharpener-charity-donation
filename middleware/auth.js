@@ -1,28 +1,28 @@
 const User = require('../model/user')
 const jwt = require('jsonwebtoken');
 
-const authenticate = (req, res, next) => {
+const authenticate = async (req, res, next) => {
     try {
         const token = req.header('Authorization');
-        console.log('token = ' + token);
+        console.log('inside auth token = ' + token);
 
         if (token == undefined) {
             return res.status(401).json({ message: 'User opened home page directly without login' });
         }
-        const user = jwt.verify(token, 'secretkey');
-        console.log('userid = ' + user.userid);
+        const decodedToken = jwt.verify(token, 'secretkey');
+        console.log('userid = ' + decodedToken.userid);
+        const user = await User.findByPk(decodedToken.userid);
 
-        User.findByPk(user.userid).then(user => {
-            console.log('user object = ' + JSON.stringify(user));
-            req.user = user;
-            next();
-        })
-            .catch(err => console.log('err = ', err));
-
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        console.log('user object = ' + JSON.stringify(user));
+        req.user = user;
+        next();
     }
     catch (err) {
         console.log(err);
-        req.status(401).json({ success: false });
+        res.status(401).json({ success: false });
     }
 }
 

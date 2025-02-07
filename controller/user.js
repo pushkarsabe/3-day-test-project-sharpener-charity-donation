@@ -112,7 +112,8 @@ exports.getAllUerData = async (req, res) => {
 
 exports.updateUser = async (req, res) => {
     try {
-        const userid = req.userid;
+        const userid = req.user.id;
+        console.log('updateUser userid = ', userid);
         const { dob, gender, passportnumber, pannumber } = req.body;
 
         let user = await Signup.findOne({ where: { id: userid } });

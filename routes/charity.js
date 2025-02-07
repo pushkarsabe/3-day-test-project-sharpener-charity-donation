@@ -9,9 +9,9 @@ router.post('/register-charity', auth.authenticate, charityController.postAddnew
 //to update charity data
 router.put('/update-charity', auth.authenticate, charityController.updateCharity);
 //to get a single charity
-router.get('charity-data:id', auth.authenticate, charityController.getCharityData);
+router.get('/charity-data:id', auth.authenticate, charityController.getCharityData);
 //get all charity data
-router.get('charity-data', auth.authenticate, charityController.getAllCharityData);
+router.get('/charity-data', auth.authenticate, charityController.getAllCharityData);
 //update charity record
 router.put('/charity-update', auth.authenticate, charityController.updateCharity);
 
