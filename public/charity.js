@@ -55,6 +55,24 @@ window.addEventListener('DOMContentLoaded', async () => {
             console.error('Failed to fetch charity data');
             showPopup('Failed to fetch charity data', 'error');
         }
+
+        const decoded = jwt_decode(token);
+        let userid = decoded.userid;
+        console.log('userid = ', userid);
+
+        const res = await axios.get(`http://localhost:5000/user/user-data/${userid}`, {
+            headers: { Authorization: token }
+        });
+
+        console.log('res:', res.data.singleUserData);
+        let user = res.data.singleUserData;
+
+        //update the user profile name
+        const userProfileDiv = document.getElementById('userProfile');
+        if (userProfileDiv) {
+            userProfileDiv.textContent = `Hello, ${user.name}`;
+        }
+
     } catch (err) {
         console.error('Error fetching charity data:', err);
     }
@@ -171,7 +189,7 @@ async function donateMoney(charityId) {
             description: "Donation Payment",
             order_id: order.id,
             handler: async function (response) {
-                
+
                 try {
                     await axios.post('http://localhost:5000/charity/record-donation', {
                         order_id: options.order_id,
@@ -181,7 +199,7 @@ async function donateMoney(charityId) {
                     }, {
                         headers: { Authorization: token }
                     });
-                    
+
                     showPopup("Payment successful! Thank you for your donation", 'success');
 
                     //Refresh cards by fetching updated data
@@ -190,7 +208,7 @@ async function donateMoney(charityId) {
                 }
                 catch (err) {
                     console.error("Error recording donation:", err);
-                    showPopup("Payment succeeded, but donation could not be recorded.",'error');
+                    showPopup("Payment succeeded, but donation could not be recorded.", 'error');
                 }
             }
         };
@@ -201,7 +219,7 @@ async function donateMoney(charityId) {
     }
     catch (err) {
         console.error("Payment failed:", err);
-        showPopup("Error initiating payment.",'error');
+        showPopup("Error initiating payment.", 'error');
     }
 }
 

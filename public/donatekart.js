@@ -126,17 +126,6 @@ window.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
-    if (token) {
-        const decoded = jwt_decode(token);
-        console.log('userid = ', decoded.userid);
-        console.log('username = ', decoded.username);
-        // append the name to the user profile
-        const userProfileDiv = document.getElementById('userProfile');
-        if (userProfileDiv) {
-            userProfileDiv.textContent = `Hello, ${decoded.username}`;
-        }
-    }
-
     try {
         const response = await axios.get('http://localhost:5000/charity/charity-data', {
             headers: { Authorization: token }
@@ -147,13 +136,31 @@ window.addEventListener('DOMContentLoaded', async () => {
         } else {
             console.error('Failed to fetch charity data');
             showPopup('Failed to fetch charity data', 'error');
-
         }
+
+        const decoded = jwt_decode(token);
+        let userid = decoded.userid;
+        console.log('userid = ', userid);
+
+        const res = await axios.get(`http://localhost:5000/user/user-data/${userid}`, {
+            headers: { Authorization: token }
+        });
+
+        console.log('res:', res.data.singleUserData);
+        let user = res.data.singleUserData;
+
+        //update the user profile name
+        const userProfileDiv = document.getElementById('userProfile');
+        if (userProfileDiv) {
+            userProfileDiv.textContent = `Hello, ${user.name}`;
+        }
+
     } catch (err) {
         console.error('Error fetching charity data:', err);
     }
 
 })//to add the charity to the page after loading
+
 
 function displayCharityCards(data) {
     console.log('inside displayCharityCards data', data);

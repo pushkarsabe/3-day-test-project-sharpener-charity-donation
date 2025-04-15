@@ -33,16 +33,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
-    if (token) {
-        const decoded = jwt_decode(token);
-        console.log('userid = ', decoded.userid);
-        console.log('username = ', decoded.username);
-        // append the name to the user profile
-        const userProfileDiv = document.getElementById('userProfile');
-        if (userProfileDiv) {
-            userProfileDiv.textContent = `Hello, ${decoded.username}`;
-        }
-    }
     try {
         const decoded = jwt_decode(token);
         let userid = decoded.userid;
@@ -56,17 +46,17 @@ document.addEventListener('DOMContentLoaded', async () => {
             console.log('response:', response.data.singleUserData);
             showPopup('Fetched user data', 'success');
 
+
             const { name, email, phoneNumber } = response.data.singleUserData;
-            // _id: "67fa0103c3f502b46196b7df"
-            // donations: "340700"
-            // email: "a@a.a"
-            // isDeleted: false
-            // name: "a"
-            // password: "$2b$10$Oy6IVy2ErWNFkLvLZOiLreNGuNoEwagAyQRl5zfQwhgcMPaA3otx."
-            // phoneNumber: "1234567890"
             document.getElementById('name').textContent = name;
             document.getElementById('email').textContent = email;
             document.getElementById('phone').textContent = phoneNumber;
+
+            //update the user profile name
+            const userProfileDiv = document.getElementById('userProfile');
+            if (userProfileDiv) {
+                userProfileDiv.textContent = `Hello, ${name}`;
+            }
 
         } else {
             console.error('Failed to fetch user data');
@@ -150,6 +140,9 @@ saveBtn.addEventListener('click', async () => {
         document.getElementById('name').textContent = user.name
         document.getElementById('email').textContent = user.email;
         document.getElementById('phone').textContent = user.phoneNumber;
+
+        //update the username inside the profile
+        document.getElementById('userProfile').textContent = `Hello, ${user.name}`;
 
         popupOverlay.style.display = 'none';
         showPopup('Profile updated successfully!', 'success');

@@ -12,14 +12,35 @@ const showPopup = (message, isSuccess = true) => {
     }, 2000);
 };
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async() => {
     console.log('inside DOMContentLoaded ');
     const token = localStorage.getItem('token');
-    console.error('token:', token);
+    // console.error('token:', token);
 
     if (!token) {
         showPopup('User not authenticated!', false);
         return;
+    }
+    try {
+        const decoded = jwt_decode(token);
+        let userid = decoded.userid;
+        console.log('userid = ', userid);
+
+        const res = await axios.get(`http://localhost:5000/user/user-data/${userid}`, {
+            headers: { Authorization: token }
+        });
+
+        console.log('res:', res.data.singleUserData);
+        let user = res.data.singleUserData;
+
+        //update the user profile name
+        const userProfileDiv = document.getElementById('userProfile');
+        if (userProfileDiv) {
+            userProfileDiv.textContent = `Hello, ${user.name}`;
+        }
+
+    } catch (err) {
+        console.error('Error fetching user data:', err);
     }
 })
 
