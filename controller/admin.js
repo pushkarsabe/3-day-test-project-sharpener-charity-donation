@@ -6,19 +6,19 @@ const jwt = require('jsonwebtoken');
 
 exports.postAddSignup = async (req, res, next) => {
     try {
-        const name = req.body.name;
-        const email = req.body.email;
-        const password = req.body.password;
-        const phoneNumber = req.body.phoneNumber;
+        console.error("Admin postAddSignup called");
+
+        const { name, email, password, phoneNumber } = req.body;
         console.log('name = ' + name);
         console.log('email = ' + email);
         console.log('phoneNumber = ' + phoneNumber);
         console.log('password = ' + password);
 
         //to see if the user already exists
-        const dataOfoneAdmin = await Admin.findOne({ where: { email: email } });
-        console.log('dataOfoneAdmin = ' + JSON.stringify(dataOfoneAdmin));
-        if (dataOfoneAdmin) {
+        const existingAdmin = await Admin.findOne({ email });
+        console.log('existingAdmin  = ' + existingAdmin);
+
+        if (existingAdmin) {
             return res.status(400).json({ message: 'Email already exists' });
         } else {
             const saltrounds = 10;
@@ -26,15 +26,16 @@ exports.postAddSignup = async (req, res, next) => {
                 console.log('err = ' + err);
                 console.log('hash = ' + hash);
 
-                const newAdmin = await Admin.create({
+                const newAdmin = await Admin({
                     name: name,
                     email: email,
                     phoneNumber: phoneNumber,
                     password: hash
                 });
-                console.log('newAdmin = ' + JSON.stringify(newAdmin));
+                newAdmin.save();
+                console.log('newAdmin = ' + newAdmin);
 
-                res.status(201).json({ newUserData: newAdmin, message: "New admin successfully signed in" });
+                res.status(201).json({ existingAdmin: newAdmin, message: "New admin successfully signed in" });
             })
         }
 
@@ -48,101 +49,162 @@ exports.postAddSignup = async (req, res, next) => {
 
 exports.postLogin = async (req, res) => {
     try {
-        const admininputEmail = req.body.email;
-        const admininputPassword = req.body.password;
-        console.log('admininputEmail = ' + admininputEmail);
-        console.log('admininputPassword = ' + admininputPassword);
+        console.error("Admin postLogin called");
 
-        const particularAdmin = await Admin.findOne({ where: { email: admininputEmail } });
-        console.log('particularAdmin = ' + JSON.stringify(particularAdmin));
-        if (!particularAdmin) { // Check if the user exists
+        const { email, password } = req.body;
+        console.log('admininputEmail = ' + email);
+        console.log('admininputPassword = ' + password);
+
+        const admin = await Admin.findOne({ email });
+        // console.log('admin = ' + admin);
+        if (!admin) {
             return res.status(404).json({ success: false, message: 'Admin not found' });
         }
 
-        console.log('particularAdmin email = ' + particularAdmin.email);
-        console.log('particularAdmin password = ' + particularAdmin.password);
+        const isMatch = await bcrypt.compare(password, admin.password);
+        console.log('isMatch = ' + isMatch);
 
-        bcrypt.compare(admininputPassword, particularAdmin.password, (error, response) => {
-            // console.log('response = ' + res                                  ponse);
-            // console.log('error = ' + error);
+        if (!isMatch) {
+            return res.status(401).json({ message: 'Password does not match' });
+        }
 
-            if (error) {
-                console.log(err);
-                return res.status(403).json({ message: 'Something went wrong' });
-            }
-            if (response) {
+        const token = generateWebToken(admin._id);
+        console.log('token = ' + token);
 
-                return res.status(201).json({ adminDetails: particularAdmin, message: 'Successfully Logged In', token: generateWebToken(particularAdmin.id) });
-            } else
-                return res.status(401).json({ message: 'Password do not match' });
-        });
+        res.status(201).json({ adminDetails: admin, message: 'Successfully Logged In', token });
 
     } catch (err) {
-        console.log("error = ", err);
+        console.error("Admin login error:", err);
         res.status(500).json({ message: 'Failed to login admin' })
     }
 }
 
 function generateWebToken(id) {
-    return jwt.sign({ userid: id }, 'secretkey');
+    return jwt.sign({ adminid: id }, 'secretkey');
 }
+
+exports.getAllUserData = async (req, res) => {
+    try {
+        console.error("Admin getAllUserData called");
+
+        const users = await User.find();
+
+        res.status(200).json({ message: 'success', getAllUserData: users });
+    }
+    catch (err) {
+        console.error('Error getAllUserData :', err);
+        res.status(500).json({ message: 'Failed to get all user data' })
+    }
+}
+
+exports.getUserData = async (req, res) => {
+    try {
+        console.error("Admin getUserData called");
+
+        let userid = req.params.userid;
+        console.log('userid = ' + userid);
+
+        const user = await User.findOne({ email: userEmail });
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        user.isDeleted = true;
+        await user.save();
+
+        res.status(200).json({ message: 'User marked as deleted successfully', singleUserData: user });
+    }
+    catch (err) {
+        console.error('Error deleting user:', err);
+        res.status(500).json({ message: 'Failed to delete user' })
+    }
+}
+
+
+exports.getAllCharityData = async (req, res) => {
+    try {
+        console.error("Admin getAllCharityData called");
+
+        const charities = await Charity.find();
+
+        res.status(200).json({ message: 'success', getAllCharityData: charities });
+    }
+    catch (err) {
+        console.error('Error getAllCharityData :', err);
+        res.status(500).json({ message: 'Failed to get charity' })
+    }
+}
+
 
 exports.deleteUser = async (req, res) => {
     try {
-        let userEmail = req.params.email;
-        console.log('deleteUser userEmail = ' + userEmail);
-        let singleUserData = await User.findOne({
-            where: { email: userEmail }
-        });
-        if (!singleUserData) {
-            return res.status(500).json({ message: 'user not found' });
-        }
-        await singleUserData.update({ isDeleleted: true });
+        console.error("Admin deleteUser called");
 
-        res.status(200).json({ message: 'User marked as deleted successfully', singleUserData: singleUserData });
+        let userid = req.params.userid;
+        console.log('deleteUser userid = ' + userid);
+
+        const user = await User.findOneAndUpdate(
+            { _id: userid },
+            { isDeleted: true },
+            { new: true }
+        );
+        console.log('user = ' + user);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.status(200).json({ message: 'User marked as deleted successfully', singleUserData: user });
     }
     catch (err) {
-        console.error('Error fetching user data:', err);
+        console.error('Error deleting user:', err);
         res.status(500).json({ message: 'Failed to delete user' })
     }
 }
 
 exports.acceptCharity = async (req, res) => {
     try {
-        let charityId = req.params.registrationId;
-        let singleCharityData = await Charity.findOne({
-            where: { uuid: charityId }
-        });
-        if (!singleCharityData) {
-            return res.status(500).json({ message: 'charity not found' });
-        }
-        //update the column
-        await singleCharityData.update({ isApproved: true });
+        console.error("Admin acceptCharity called");
 
-        res.status(200).json({ message: 'Charity accepted successfully', singleCharityData: singleCharityData });
+        let charityId = req.params.registrationId;
+        console.log('acceptCharity charityId = ', charityId);
+
+        const charity = await Charity.findOne({ uuid: charityId });
+        if (!charity) {
+            return res.status(404).json({ message: 'Charity not found' });
+        }
+
+        //update the column
+        charity.isApproved = true;
+        await charity.save();
+
+        res.status(200).json({ message: 'Charity accepted successfully', singleCharityData: charity });
     }
     catch (err) {
-        console.error('Error fetching charity data:', err);
+        console.error('Error accepting charity:', err);
         res.status(500).json({ message: 'Failed to accepte charity' });
     }
 }//acceptCharity
 
 exports.rejectCharity = async (req, res) => {
     try {
-        let charityId = req.params.registrationId;
-        let singleCharityData = await Charity.findOne({
-            where: { uuid: charityId }
-        });
-        if (!singleCharityData) {
-            return res.status(500).json({ message: 'charity not found' });
-        }
-        //update the column
-        await singleCharityData.update({ isApproved: false });
+        console.error("Admin rejectCharity called");
 
-        res.status(200).json({ message: 'Charity rejected successfully', singleCharityData: singleCharityData });
+        let charityId = req.params.charityId;
+        console.log('charityId = ', charityId);
+
+        const charity = await Charity.findOneAndUpdate(
+            { _id: charityId },
+            { isApproved: true },
+            { new: true }
+        );
+        if (!charity) {
+            return res.status(404).json({ message: 'Charity not found' });
+        }
+
+        res.status(200).json({ message: 'Charity rejected successfully', singleCharityData: charity });
     }
     catch (err) {
-        console.error('Error fetching charity data:', err);
-        res.status(500).json({ message: 'Failed to reject charity' });
+        console.error('Error deleting charity:', err);
+        res.status(500).json({ message: 'Failed to delete charity' });
     }
 }//acceptCharity

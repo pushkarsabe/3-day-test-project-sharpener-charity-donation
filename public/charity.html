@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Charity</title>
+    <link rel="shortcut icon" href="#">
+    <link rel="stylesheet" href="./charity.css">
+</head>
+
+<body>
+
+    <header class="navbar">
+        <div class="logo">CharityConnect</div>
+
+        <div class="nav-profile-container">
+
+            <nav>
+                <ul class="nav-links">
+                    <li><button onclick="window.location.href='/donatekart.html'">Home</button></li>
+                    <li><button onclick="window.location.href='/fundRaisers.html'">Fund-Raisers</button></li>
+                    <li><button onclick="window.location.href='/charity.html'">Charities</button></li>
+                    <li><button>Donate</button></li>
+                    <li><button>About</button></li>
+                    <li><button>Contact</button></li>
+                </ul>
+            </nav>
+
+            <div class="profile-name">
+                <div id="userProfile">Hello, Pushkar</div>
+            </div>
+
+        </div>
+    </header>
+    
+
+    <div class="hero">
+        <img src="./Images/1.jpg" alt="Charity Banner">
+        <h2>Welcome to Charity Page</h2>
+    </div>
+
+
+    <div class="filters">
+        <input type="text" id="searchName" placeholder="Search by Name">
+        <input type="text" id="searchLocation" placeholder="Filter by Location">
+        <input type="text" id="searchCategory" placeholder="Filter by Category">
+    </div>
+
+    <div class="cards-container" id="charityCards">
+
+    </div>
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="./charity.js"></script>
+</body>
+
+</html>

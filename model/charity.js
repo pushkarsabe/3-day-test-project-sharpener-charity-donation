@@ -1,107 +1,100 @@
-const Sequelize = require('sequelize');
-const sequelize = require('../util/db');
-const { UUID, UUIDV4 } = Sequelize;
+const mongoose = require('mongoose');
+const { v4: uuidv4 } = require('uuid');
 
-const Charity = sequelize.define('charity', {
-    id: {
-        type: Sequelize.INTEGER,
-        autoIncrement: true,
-        allowNull: false,
-        primaryKey: true
-    },
+const charitySchema = new mongoose.Schema({
     uuid: {
-        type: UUID, //setup as registration id 
-        defaultValue: UUIDV4,
-        allowNull: false,
-        unique: true
+        type: String,
+        default: uuidv4,
+        unique: true,
+        required: true
     },
     name: {
-        type: Sequelize.STRING,
-        allowNull: false,
+        type: String,
+        required: true
     },
     email: {
-        type: Sequelize.STRING,
-        allowNull: false,
+        type: String,
+        required: true
     },
     phoneNumber: {
-        type: Sequelize.STRING,
-        allowNull: false,
+        type: String,
+        required: true
     },
     category: {
-        type: Sequelize.STRING,
-        allowNull: false,
+        type: String,
+        required: true
     },
-
-
     beneficiary: {
-        type: Sequelize.STRING,
-        allowNull: false,
+        type: String,
+        required: true
     },
     beneficiaryName: {
-        type: Sequelize.STRING,
-        allowNull: false,
+        type: String,
+        required: true
     },
     relation: {
-        type: Sequelize.STRING,
-        allowNull: false,
+        type: String,
+        required: true
     },
     beneficiaryLocationState: {
-        type: Sequelize.STRING,
-        allowNull: false,
+        type: String,
+        required: true
     },
     beneficiaryLocationCity: {
-        type: Sequelize.STRING,
-        allowNull: false,
+        type: String,
+        required: true
     },
     beneficiaryMobileNumber: {
-        type: Sequelize.STRING,
-        allowNull: false,
+        type: String,
+        required: true
     },
-
-
     funds: {
-        type: Sequelize.STRING,
-        allowNull: false,
+        type: String,
+        required: true
     },
     hospitalName: {
-        type: Sequelize.STRING,
-        allowNull: false,
+        type: String,
+        required: true
     },
     hospitalLocationState: {
-        type: Sequelize.STRING,
-        allowNull: false,
+        type: String,
+        required: true
     },
     hospitalLocationCity: {
-        type: Sequelize.STRING,
-        allowNull: false,
+        type: String,
+        required: true
     },
     medicalCondition: {
-        type: Sequelize.STRING,
-        allowNull: false,
+        type: String,
+        required: true
     },
     hospitalisationStatus: {
-        type: Sequelize.STRING,
-        allowNull: false,
+        type: String,
+        required: true
     },
     date: {
-        type: Sequelize.STRING,
-        allowNull: false,
+        type: String,
+        required: true
     },
-
-
     fundraiserName: {
-        type: Sequelize.STRING,
-        allowNull: false,
+        type: String,
+        required: true
     },
     storyForFundraising: {
-        type: Sequelize.STRING,
-        allowNull: false,
+        type: String,
+        required: true
     },
     isApproved: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: false,
+        type: Boolean,
+        default: false
     },
-
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    }
+}, {
+    timestamps: true
 });
 
-module.exports = Charity;
+module.exports = mongoose.model('Charity', charitySchema);

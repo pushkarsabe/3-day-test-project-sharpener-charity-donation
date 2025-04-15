@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login Page</title>
+    <link rel="shortcut icon" href="#">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="adminLogin.css">
+</head>
+
+<body>
+    <header>
+        <h2>Admin Login</h2>
+    </header>
+
+    <div>
+        <form id="loginForm">
+
+            <label>Enter Email :</label>
+            <input type="text" name="email" id="inputEmail" required>
+
+            <label>Enter Password :</label>
+            <input type="password" name="password" id="inputPassword" required>
+
+            <button type="submit">Login</button>
+            <button id="signupBtn" type="button">Signup Page</button>
+        </form>
+    </div>
+    <div id="message">
+    </div>
+    <script src="./adminLogin.js"></script>
+</body>
+
+</html>

@@ -1,13 +1,11 @@
 const Order = require('../model/order');
 const Razorpay = require('razorpay');
 const sendEmail = require('../config/emailService');
-const cloudinary = require('../config/cloudinary');
-const PDFDocument = require('pdfkit');
 require('dotenv').config();
 
 exports.donateMoney = async (req, res, next) => {
     try {
-        const { amount } = req.body;
+        let { amount } = req.body;
         console.log('amount = ' + amount);
 
         if (!amount || amount <= 0) {
@@ -32,25 +30,37 @@ exports.donateMoney = async (req, res, next) => {
         }
 
         // Creating an order for the user
-        const userOrder = await req.user.createOrder({ orderid: order.id, status: 'PENDING' });
+        const userOrder = await Order.create({
+            orderid: order.id,
+            status: 'PENDING',
+            userId: req.user._id
+        });
+        console.log('userOrder = ' + userOrder);
 
-        return res.status(201).json({ order, userOrder, message: 'Donation created successfully' });
+        return res.status(201).json({
+            order,
+            userOrder,
+            key_id: process.env.RAZORPAY_KEY_ID,
+            message: 'Donation created successfully'
+        });
     }
     catch (err) {
         console.log('Error in donateMoney: ', err);
+        return res.status(500).json({ message: 'Something went wrong' });
     }
 }//donateMoney
 
-exports.updateTransactionstatus = async (req, res, next) => {
+exports.updateTransactionStatus = async (req, res, next) => {
     try {
-        const { payment_id, order_id } = req.body;
+        const { payment_id, order_id, amount } = req.body;
+        console.log('updateTransactionstatus payment_id :', payment_id, "order_id :", order_id, 'amount = ', amount);
 
         // Find the order based on the order ID
-        const orderBeforeUpdate = await Order.findOne({ where: { orderid: order_id } });
-        console.log('orderBeforeUpdate:', orderBeforeUpdate.toJSON());
+        const order = await Order.findOne({ orderid: order_id });
+        console.log('order:', order);
 
         // If the order is not found, return error
-        if (!orderBeforeUpdate) {
+        if (!order) {
             return res.status(404).json({ success: false, message: 'Order not found' });
         }
 
@@ -60,75 +70,36 @@ exports.updateTransactionstatus = async (req, res, next) => {
         }
 
         // Update the order status to 'SUCCESSFUL' and save payment ID
-        const promise1 = orderBeforeUpdate.update({ paymentid: payment_id, status: 'SUCCESSFUL' });
+        order.paymentid = payment_id;
+        order.status = 'SUCCESSFUL';
+        order.amount = amount.toString();
+        await order.save();
 
         // Donation amount 
-        const donationAmount = orderBeforeUpdate.amount;
-
+        const donationAmount = amount || req.body.amount || 0;
+        console.log('donationAmount :', donationAmount);
         // Get the current donations of the user 
         const currentDonations = parseFloat(req.user.donations) || 0;
-
-        // Update the donations field by adding the donation amount
-        const promise2 = req.user.update({
-            donations: (currentDonations + donationAmount).toString()  // Convert the result back to string
-        });
-
-        // Wait for both updates to be completed
-        await Promise.all([promise1, promise2]);
+        console.log('currentDonations :', currentDonations);
+        //update the donation amount in user table
+        req.user.donations = (currentDonations + donationAmount).toString();
+        await req.user.save();
 
         // After successful updates, retrieve the updated order and user
-        const orderAfterUpdate = await Order.findOne({ where: { orderid: order_id } });
-        console.log('orderAfterUpdate:', orderAfterUpdate.toJSON());
+        const orderAfterUpdate = await Order.find({ orderid: order_id });
+        console.log('orderAfterUpdate:', orderAfterUpdate);
 
-        const userAfterUpdate = await req.user.reload();
-        console.log('userAfterUpdate:', userAfterUpdate.toJSON());
+        //send email
+        let email = req.user.email;
+        console.log('email :', email);
+        console.log('amount :', amount);
+        await sendEmail(email, amount);
 
-        // Create the PDF receipt
-        const pdfDoc = new PDFDocument();
-        let pdfBuffer = [];
-        pdfDoc.on('data', chunk => pdfBuffer.push(chunk));
-        pdfDoc.on('end', async () => {
-            const pdfData = Buffer.concat(pdfBuffer);
-
-            // Upload the PDF to Cloudinary
-            try {
-                const uploadResponse = await cloudinary.uploader.upload_stream(
-                    { resource_type: 'auto', public_id: `receipt_${order_id}` },
-                    async (error, result) => {
-                        if (error) {
-                            console.log("Error uploading to Cloudinary: ", error);
-                            return res.status(500).json({ success: false, message: 'Failed to upload PDF to Cloudinary' });
-                        }
-
-                        // Send the download link to the user in the email
-                        const pdfDownloadLink = result.secure_url;
-                        const donorEmail = req.user.email;
-                        const transactionStatus = 'Successful';
-
-                        // Send email with the PDF link
-                        await sendEmail(donorEmail, donationAmount, transactionStatus, pdfDownloadLink);
-
-                        return res.status(202).json({
-                            success: true,
-                            message: 'Transaction Successful',
-                            receiptUrl: pdfDownloadLink
-                        });
-                    }
-                );
-
-                pdfDoc.pipe(uploadResponse);
-                pdfDoc.text(`Donation Receipt for Order ID: ${order_id}`);
-                pdfDoc.text(`Amount Donated: ₹${donationAmount}`);
-                pdfDoc.text(`Transaction ID: ${payment_id}`);
-                pdfDoc.text(`Transaction Status: SUCCESSFUL`);
-                pdfDoc.text(`Donor Name: ${req.user.name}`);
-                pdfDoc.text(`Thank you for your generous donation!`);
-                pdfDoc.end();
-            } catch (err) {
-                console.error('Error during PDF creation or Cloudinary upload:', err);
-                return res.status(500).json({ success: false, message: 'Failed to create and upload PDF' });
-            }
+        return res.status(201).json({
+            orderAfterUpdate,
+            message: 'Donation updated successfully'
         });
+
     } catch (err) {
         console.log('updateTransactionstatusF err = ' + err);
         return res.status(500).json({ success: false, message: 'Transaction Failed' });

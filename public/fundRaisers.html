@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fund Raisers</title>
+    <link rel="shortcut icon" href="#">
+    <link rel="stylesheet" href="/fundRaisers.css">
+</head>
+
+<body>
+    <header class="navbar">
+        <div class="logo">CharityConnect</div>
+
+        <div class="nav-profile-container">
+
+            <nav>
+                <ul class="nav-links">
+                    <li><button onclick="window.location.href='/donatekart.html'">Home</button></li>
+                    <li><button onclick="window.location.href='/fundRaisers.html'">Fund-Raisers</button></li>
+                    <li><button onclick="window.location.href='/charity.html'">Charities</button></li>
+                    <li><button>Donate</button></li>
+                    <li><button>About</button></li>
+                    <li><button>Contact</button></li>
+                </ul>
+            </nav>
+
+            <div class="profile-name">
+                <div id="userProfile">Hello, Pushkar</div>
+            </div>
+
+        </div>
+    </header>
+
+    <div id="headerDiv">
+        <h2>Welcome to Fund Raisers Registration</h2>
+    </div>
+
+    <div id="popup">
+    </div>
+
+    <form id="charityForm">
+        <div class="form-group">
+            <label for="name">Your Full Name</label>
+            <input type="text" id="name" name="name" required />
+        </div>
+
+        <div class="form-group">
+            <label for="email">Your Email</label>
+            <input type="email" id="email" name="email" required />
+        </div>
+
+        <div class="form-group">
+            <label for="phoneNumber">Your Phone Number</label>
+            <input type="text" id="phoneNumber" name="phoneNumber" required />
+        </div>
+
+        <div class="form-group">
+            <label for="category">Category</label>
+            <input type="text" id="category" name="category" required />
+        </div>
+
+        <div class="form-group">
+            <label for="beneficiary">Beneficiary</label>
+            <input type="text" id="beneficiary" name="beneficiary" required />
+        </div>
+
+        <div class="form-group">
+            <label for="beneficiaryName">Beneficiary Name</label>
+            <input type="text" id="beneficiaryName" name="beneficiaryName" required />
+        </div>
+
+        <div class="form-group">
+            <label for="relation">Relation to Beneficiary</label>
+            <input type="text" id="relation" name="relation" required />
+        </div>
+
+        <div class="form-group">
+            <label for="beneficiaryLocationState">Beneficiary State</label>
+            <input type="text" id="beneficiaryLocationState" name="beneficiaryLocationState" required />
+        </div>
+
+        <div class="form-group">
+            <label for="beneficiaryLocationCity">Beneficiary City</label>
+            <input type="text" id="beneficiaryLocationCity" name="beneficiaryLocationCity" required />
+        </div>
+
+        <div class="form-group">
+            <label for="beneficiaryMobileNumber">Beneficiary Mobile Number</label>
+            <input type="text" id="beneficiaryMobileNumber" name="beneficiaryMobileNumber" required />
+        </div>
+
+        <div class="form-group">
+            <label for="funds">Required Funds (in INR)</label>
+            <input type="text" id="funds" name="funds" required />
+        </div>
+
+        <div class="form-group">
+            <label for="hospitalName">Hospital Name</label>
+            <input type="text" id="hospitalName" name="hospitalName" required />
+        </div>
+
+        <div class="form-group">
+            <label for="hospitalLocationState">Hospital State</label>
+            <input type="text" id="hospitalLocationState" name="hospitalLocationState" required />
+        </div>
+
+        <div class="form-group">
+            <label for="hospitalLocationCity">Hospital City</label>
+            <input type="text" id="hospitalLocationCity" name="hospitalLocationCity" required />
+        </div>
+
+        <div class="form-group">
+            <label for="medicalCondition">Medical Condition</label>
+            <input type="text" id="medicalCondition" name="medicalCondition" required />
+        </div>
+
+        <div class="form-group">
+            <label for="hospitalisationStatus">Hospitalisation Status</label>
+            <input type="text" id="hospitalisationStatus" name="hospitalisationStatus" required />
+        </div>
+
+        <div class="form-group">
+            <label for="date">Date</label>
+            <input type="date" id="date" name="date" required />
+        </div>
+
+        <div class="form-group">
+            <label for="fundraiserName">Fundraiser Name</label>
+            <input type="text" id="fundraiserName" name="fundraiserName" required />
+        </div>
+
+        <div class="form-group">
+            <label for="storyForFundraising">Story for Fundraising</label>
+            <textarea id="storyForFundraising" name="storyForFundraising" required></textarea>
+        </div>
+
+        <button type="submit">Submit</button>
+    </form>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/fundRaisers.js"></script>
+</body>
+
+</html>

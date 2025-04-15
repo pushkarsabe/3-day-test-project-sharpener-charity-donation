@@ -1,29 +1,27 @@
-const Sequelize = require('sequelize');
-const sequelize = require('../util/db');
+const mongoose = require('mongoose');
 
-let Admin = sequelize.define('admin', {
-    id: {
-        type: Sequelize.INTEGER,
-        autoIncrement: true,
-        allowNull: false,
-        primaryKey: true
-    },
+const adminSchema = new mongoose.Schema({
     name: {
-        type: Sequelize.STRING,
-        allowNull: false,
+        type: String,
+        required: true,
+        trim: true
     },
     email: {
-        type: Sequelize.STRING,
-        allowNull: false,
+        type: String,
+        required: true,
+        unique: true, // Optional, if you want emails to be unique
+        lowercase: true
     },
     phoneNumber: {
-        type: Sequelize.STRING,
-        allowNull: false,
+        type: String,
+        required: true,
+        trim: true
     },
     password: {
-        type: Sequelize.STRING,
-        allowNull: false,
-    },
-});
+        type: String,
+        required: true
+    }
+}, { timestamps: true }); // Optional: adds createdAt and updatedAt fields
 
-module.exports = Admin;
+
+module.exports = mongoose.model('Admin', adminSchema);

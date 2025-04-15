@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <link rel="stylesheet" href="./userProfile.css">
+    <link rel="shortcut icon" href="#">
+</head>
+
+<body>
+
+    <header class="navbar">
+        <div class="logo">CharityConnect</div>
+
+        <div class="nav-profile-container">
+
+            <nav>
+                <ul class="nav-links">
+                    <li><button onclick="window.location.href='/donatekart.html'">Home</button></li>
+                    <li><button onclick="window.location.href='/fundRaisers.html'">Fund-Raisers</button></li>
+                    <li><button onclick="window.location.href='/charity.html'">Charities</button></li>
+                    <li><button>Donate</button></li>
+                    <li><button>About</button></li>
+                    <li><button>Contact</button></li>
+                </ul>
+            </nav>
+
+            <div class="profile-name">
+                <div id="userProfile" onclick="window.location.href='/userProfile.html'"></div>
+            </div>
+
+        </div>
+    </header>
+
+
+    <section id="userSection">
+        <div id="userDiv">
+            <div class="section-title">My Profile</div>
+
+            <div class="profile-info">
+                <div class="avatar"></div>
+                <div class="user-details">
+                    <div class="user-name">
+                        <span id="name">Pushkar</span>
+                        <span class="edit-icon" id="editProfileBtn" title="Edit Profile">✏️</span>
+                    </div>
+                    <div class="user-name" id="name"></div>
+                    <div class="user-email" id="email"></div>
+                    <div class="user-phone" id="phone"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Popup Modal -->
+    <div class="popup-overlay" id="popupOverlay">
+        <div class="popup-modal">
+            <h2>Edit Profile</h2>
+            <input type="text" id="editName" placeholder="Enter name" />
+            <input type="email" id="editEmail" placeholder="Enter email" />
+            <input type="text" id="editPhone" placeholder="Enter phone number" />
+
+            <div class="popup-actions">
+                <button id="saveBtn">Save</button>
+                <button id="closeBtn">Close</button>
+            </div>
+        </div>
+    </div>
+
+
+    <section id="userTotalDonationSection">
+        <div>
+            <h2>Total doantion</h2>
+
+        </div>
+    </section>
+
+    <section id="userDonationSection">
+        <div>
+            <h2>User doantion records</h2>
+
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="./userProfile.js"></script>
+</body>
+
+</html>

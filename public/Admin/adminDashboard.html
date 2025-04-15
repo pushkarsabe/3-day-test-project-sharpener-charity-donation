@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard</title>
+    <link rel="shortcut icon" href="#">
+    <link rel="stylesheet" href="adminDashboard.css" />
+</head>
+
+<body>
+    <header>
+        <h1>Admin Dashboard</h1>
+    </header>
+
+    <main>
+        
+        <section id="userDiv">
+            <div id="userHeaderdiv">
+                <h2>Manage Users</h2>
+            </div>
+            <div id="userCardiv">
+                <div class="card-container" id="userCards">
+                    <!-- User cards will be dynamically inserted here -->
+                </div>
+            </div>
+        </section>
+
+        <section id="charityDiv">
+            <div id="charityHeaderdiv">
+                <h2>Manage Charities</h2>
+            </div>
+            <div id="charityCardDiv">
+                <div class="card-container" id="charityCards">
+                    <!-- charity cards will be dynamically inserted here -->
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="adminDashboard.js"></script>
+</body>
+
+</html>

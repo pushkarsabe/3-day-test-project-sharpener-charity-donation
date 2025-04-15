@@ -4,37 +4,38 @@ const jwt = require('jsonwebtoken');
 
 exports.postAddSignup = async (req, res, next) => {
     try {
-        const name = req.body.name;
-        const email = req.body.email;
-        const password = req.body.password;
-        const phoneNumber = req.body.phoneNumber;
+        console.log('postAddSignup called');
+        const { name, email, password, phoneNumber } = req.body;
         console.log('name = ' + name);
         console.log('email = ' + email);
         console.log('phoneNumber = ' + phoneNumber);
         console.log('password = ' + password);
 
         //to see if the user already exists
-        const dataOfoneUser = await Signup.findOne({ where: { email: email } });
-        console.log('dataOfoneUser = ' + JSON.stringify(dataOfoneUser));
+        const dataOfoneUser = await Signup.findOne({ email });
+        console.log('dataOfoneUser = ', dataOfoneUser);
+
         if (dataOfoneUser) {
             return res.status(400).json({ message: 'Email already exists' });
-        } else {
-            const saltrounds = 10;
-            bcrypt.hash(password, saltrounds, async (err, hash) => {
-                console.log('err = ' + err);
-                console.log('hash = ' + hash);
-
-                const newUser = await Signup.create({
-                    name: name,
-                    email: email,
-                    phoneNumber: phoneNumber,
-                    password: hash
-                });
-                console.log('newUser = ' + JSON.stringify(newUser));
-
-                res.status(201).json({ newUserData: newUser, message: "New user successfully signed in" });
-            })
         }
+
+        const saltOrRounds = 10;
+        bcrypt.hash(password, saltOrRounds, async (err, hash) => {
+            if (err) {
+                console.log('hashing error = ', err);
+                return res.status(501).json({ message: 'Error hashing password' });
+            }
+
+            const newUser = new Signup({
+                name,
+                email,
+                phoneNumber,
+                password: hash
+            });
+
+            await newUser.save();
+            res.status(201).json({ newUserData: newUser, message: "New user successfully signed in" });
+        })
 
     } catch (err) {
         console.log("post sign up error user ", err);
@@ -46,34 +47,28 @@ exports.postAddSignup = async (req, res, next) => {
 
 exports.postLogin = async (req, res) => {
     try {
-        const userinputEmail = req.body.email;
-        const userinputPassword = req.body.password;
-        console.log('userinputEmail = ' + userinputEmail);
-        console.log('userinputPassword = ' + userinputPassword);
+        console.log('postLogin called');
+        const { email, password } = req.body;
+        console.log('email = ', email);
+        console.log('password = ', password);
 
-        const particularUser = await Signup.findOne({ where: { email: userinputEmail } });
-        console.log('particularUser = ' + JSON.stringify(particularUser));
-        if (!particularUser) { // Check if the user exists
+        const user = await Signup.findOne({ email });
+        console.log('user = ', user);
+        if (!user) { // Check if the user exists
             return res.status(404).json({ success: false, message: 'User not found' });
         }
+        if (user.isDeleted) {
+            return res.status(402).json({ message: "Account is deleted" });
+        }
 
-        console.log('particularUser email = ' + particularUser.email);
-        console.log('particularUser password = ' + particularUser.password);
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(401).json({ message: 'Password does not match' });
+        }
+        const token = generateWebToken(user._id, user.name);
+        console.log('token = ', token);
 
-        bcrypt.compare(userinputPassword, particularUser.password, (error, response) => {
-            // console.log('response = ' + res                                  ponse);
-            // console.log('error = ' + error);
-
-            if (error) {
-                console.log(err);
-                return res.status(403).json({ message: 'Something went wrong' });
-            }
-            if (response) {
-
-                return res.status(201).json({ userDetails: particularUser, message: 'Successfully Logged In', token: generateWebToken(particularUser.id) });
-            } else
-                return res.status(401).json({ message: 'Password do not match' });
-        });
+        res.status(201).json({ userDetails: user, message: 'Successfully Logged In', token });
 
     } catch (err) {
         console.log("error = ", err);
@@ -81,16 +76,20 @@ exports.postLogin = async (req, res) => {
     }
 }
 
-function generateWebToken(id) {
-    return jwt.sign({ userid: id }, 'secretkey');
+function generateWebToken(id, name) {
+    return jwt.sign({ userid: id, username: name }, 'secretkey');
 }
 
 exports.getUserData = async (req, res) => {
     try {
         let userid = req.params.id;
-        let singleUserData = await Signup.findAll({
-            where: { id: userid }
-        });
+        console.log('getUserData called userid', userid);
+
+        let singleUserData = await Signup.findOne({ _id: userid });
+
+        if (!singleUserData) return res.status(404).json({ message: 'User not found' });
+        console.log('singleUserData = ', singleUserData);
+
         res.status(200).json({ message: 'success', singleUserData: singleUserData });
     }
     catch (err) {
@@ -101,7 +100,14 @@ exports.getUserData = async (req, res) => {
 
 exports.getAllUerData = async (req, res) => {
     try {
-        let allUserData = await Signup.findAll();
+        console.log('user getAllUerData called');
+
+        let allUserData = await Signup.find({ isDeleted: false });
+        console.log('allUserData = ', allUserData);
+
+        if (!allUserData) {
+            return res.status(400).json({ message: 'Failed to fetch all user data' });
+        }
         res.status(200).json({ message: 'success', allUserData: allUserData });
     }
     catch (err) {
@@ -112,27 +118,23 @@ exports.getAllUerData = async (req, res) => {
 
 exports.updateUser = async (req, res) => {
     try {
-        const userid = req.user.id;
+        const userid = req.user._id;
         console.log('updateUser userid = ', userid);
-        const { dob, gender, passportnumber, pannumber } = req.body;
+        const { name, email, phoneNumber, gender } = req.body;
+        console.log('name = ' + name);
+        console.log('email = ' + email);
+        console.log('phoneNumber = ' + phoneNumber);
 
-        let user = await Signup.findOne({ where: { id: userid } });
-
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
-        //update if the user sends the data
         const updatedData = {};
-        if (dob) updatedData.dob = dob;
-        if (gender) updatedData.gender = gender;
-        if (passportnumber) updatedData.passportnumber = passportnumber;
-        if (pannumber) updatedData.pannumber = pannumber;
+        if (name) updatedData.name = name;
+        if (email) updatedData.email = email;
+        if (phoneNumber) updatedData.phoneNumber = phoneNumber;
 
-        await user.update(updatedData);
+        let updatedUser = await Signup.findByIdAndUpdate(userid, updatedData, { new: true });
 
         res.status(200).json({
             message: "User updated successfully",
-            user: updatedData
+            updatedUser: updatedUser
         });
     }
     catch (err) {

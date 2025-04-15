@@ -1,9 +1,18 @@
-const Sequelize = require('sequelize');
+const mongoose = require('mongoose');
 require('dotenv').config();
 
-const sequelize = new Sequelize(process.env.MYSQLSCHEMA, process.env.MYSQLUSERNAME, process.env.MYSQLUSERNAME, {
-    dialect: process.env.MYSQLDIALECT,
-    host: process.env.HOST
-});
+const connectDB = async () => {
+    try {
+        await mongoose.connect(process.env.MONGO_URI, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true
+        });
+        console.log('MongoDB connected');
+    } catch (err) {
+        console.error('MongoDB connection failed:', err.message);
+        process.exit(1);
+    }
+};
 
-module.exports = sequelize;
+module.exports = connectDB;
+

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donate Cart</title>
+    <link rel="shortcut icon" href="#">
+    <link rel="stylesheet" href="/donatekart.css    ">
+</head>
+
+<body>
+    <header class="navbar">
+        <div class="logo">CharityConnect</div>
+
+        <div class="nav-profile-container">
+
+            <nav>
+                <ul class="nav-links">
+                    <li><button onclick="window.location.href='/donatekart.html'">Home</button></li>
+                    <li><button onclick="window.location.href='/fundRaisers.html'">Fund-Raisers</button></li>
+                    <li><button onclick="window.location.href='/charity.html'">Charities</button></li>
+                    <li><button>Donate</button></li>
+                    <li><button>About</button></li>
+                    <li><button>Contact</button></li>
+                </ul>
+            </nav>
+
+            <div class="profile-name">
+                <div id="userProfile" onclick="window.location.href='/userProfile.html'"></div>
+            </div>
+
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <img src="../Images/2.jpg" alt="Donate Banner" />
+            <button class="donate-button" id="donateMoney">Donate Now</button>
+        </section>
+    </main>
+
+    <section id="donationMessage">
+        <div id="donationMessageDiv">
+            <div class="carousel">
+                <div class="carousel-message">"Donation helps you smile!"</div>
+                <div class="carousel-message">"Every rupee counts – make a change today."</div>
+                <div class="carousel-message">"Be the reason someone believes in kindness."</div>
+                <div class="carousel-message">"Charity begins with you."</div>
+            </div>
+        </div>
+    </section>
+
+    <div id="categoryDiv">
+        <div id="categoryHeadingDiv">
+            <h2>Medical Emergencies</h2>
+        </div>
+
+        <div id="charityCardDiv">
+            <div id="charityCardContainer" class="charity-grid">
+            </div>
+        </div>
+    </div>
+
+    <div id="editCharityPopup" class="popup-overlay">
+        <div class="popup-form">
+            <h2>Edit Charity</h2>
+            <form id="editCharityForm">
+                <input type="hidden" id="editCharityId" />
+
+                <label>Category:</label>
+                <input type="text" id="editCategory" required />
+
+                <label>Beneficiary:</label>
+                <input type="text" id="editBeneficiary" required />
+
+                <label>Beneficiary Name:</label>
+                <input type="text" id="editBeneficiaryName" required />
+
+                <label>Relation:</label>
+                <input type="text" id="editRelation" required />
+
+                <label>Hospital Name:</label>
+                <input type="text" id="editHospitalName" required />
+
+                <label>Hospital Location (State):</label>
+                <input type="text" id="editHospitalLocationState" required />
+
+                <label>Hospital Location (City):</label>
+                <input type="text" id="editHospitalLocationCity" required />
+
+                <label>Medical Condition:</label>
+                <input type="text" id="editMedicalCondition" required />
+
+                <label>Hospitalisation Status:</label>
+                <input type="text" id="editStatus" required />
+
+                <label>Date:</label>
+                <input type="date" id="editDate" required />
+
+                <label>Fundraiser Name:</label>
+                <input type="text" id="editFundraiserName" required />
+
+                <label>Funds Required (₹):</label>
+                <input type="number" id="editFunds" required />
+
+                <label>Phone Number:</label>
+                <input type="text" id="editPhone" required />
+
+                <label>Story:</label>
+                <textarea id="editStory" rows="4"></textarea>
+
+                <div class="popup-buttons">
+                    <button type="submit">Save</button>
+                    <button type="button" onclick="closeEditPopup()">Cancel</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+    <div id="chartSectionDiv">
+        <div id="chartHeaderDiv">
+            <h2>Bar Chart</h2>
+        </div>
+        <div id="chartDiv">
+            <canvas id="barChart"></canvas>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="./donatekart.js"></script>
+</body>
+
+</html>

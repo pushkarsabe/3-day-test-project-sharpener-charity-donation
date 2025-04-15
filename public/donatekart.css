@@ -1,0 +1,652 @@
+/* Reset some default styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Navbar styles */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #0c2d57;
+    padding: 1rem 2rem;
+    color: white;
+    flex-wrap: wrap;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.nav-links li button {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 6px 12px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.nav-links li button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #ffb703;
+    transform: scale(1.05);
+}
+
+/* Wrap nav and profile together */
+.nav-profile-container {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.profile-name {
+    margin-left: auto;
+    padding-left: 16px;
+}
+
+/* user profile section */
+#userProfile {
+    background-color: rgba(0, 0, 0, 0.3);
+    /* dark shaded circle */
+    color: white;
+    padding: 10px 16px;
+    border-radius: 50px;
+    /* make it pill-shaped */
+    font-weight: bold;
+    transition: transform 0.2s ease, background-color 0.3s ease;
+    cursor: pointer;
+    display: inline-block;
+}
+
+#userProfile:hover {
+    transform: scale(1.05);
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1rem;
+    }
+
+    .nav-profile-container {
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
+        margin-top: 1rem;
+    }
+
+    .nav-links {
+        flex-direction: column;
+        width: 100%;
+        gap: 0.5rem;
+    }
+
+    .nav-links li button {
+        width: 100%;
+        text-align: left;
+    }
+
+    .profile-name {
+        align-self: flex-end;
+        margin-top: 1rem;
+    }
+}
+
+
+/* Hero section */
+.hero {
+    position: relative;
+    width: 90vw;
+    height: 90vh;
+    margin: 2rem auto;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+.hero img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 10px;
+}
+
+.donate-button {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #ffb703;
+    color: black;
+    padding: 0.75rem 1.5rem;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.donate-button:hover {
+    background-color: #ff9900;
+}
+
+
+#donationMessage {
+    background: linear-gradient(to right, #eceff1, #f5f5f5);
+    padding: 60px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#donationMessageDiv {
+    width: 100%;
+    max-width: 800px;
+    overflow: hidden;
+    background-color: #e0e0e0;
+    /* cool gray */
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2), 0 0 30px rgba(255, 255, 255, 0.2);
+    position: relative;
+    backdrop-filter: blur(4px);
+    transition: transform 0.4s ease;
+}
+
+/* Subtle hover effect */
+#donationMessageDiv:hover {
+    transform: scale(1.02);
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.25), 0 0 40px rgba(255, 255, 255, 0.25);
+}
+
+/* Carousel wrapper */
+.carousel {
+    display: flex;
+    animation: slideMessages 20s infinite ease-in-out;
+}
+
+/* Individual messages */
+.carousel-message {
+    min-width: 100%;
+    text-align: center;
+    font-size: 1.6rem;
+    color: #111;
+    /* blackish text */
+    font-weight: 700;
+    padding: 20px;
+    opacity: 0.85;
+}
+
+/* Sliding animation */
+@keyframes slideMessages {
+
+    0%,
+    20% {
+        transform: translateX(0%);
+    }
+
+    25%,
+    45% {
+        transform: translateX(-100%);
+    }
+
+    50%,
+    70% {
+        transform: translateX(-200%);
+    }
+
+    75%,
+    95% {
+        transform: translateX(-300%);
+    }
+
+    100% {
+        transform: translateX(0%);
+    }
+}
+
+/* Responsive tweaks */
+@media (max-width: 600px) {
+    #donationMessageDiv {
+        padding: 20px;
+    }
+
+    .carousel-message {
+        font-size: 1.2rem;
+    }
+}
+
+#categoryDiv {
+    padding: 40px;
+    box-sizing: border-box;
+}
+
+
+/* Header section styling */
+#categoryHeadingDiv {
+    background-color: #e0f7fa;
+    padding: 20px;
+    text-align: center;
+    border-radius: 12px 12px 0 0;
+    border: 1px solid blue;
+    margin-bottom: 40px;
+}
+
+#categoryHeadingDiv h2 {
+    font-size: 2rem;
+    color: #00695c;
+    margin: 0;
+    font-weight: 700;
+}
+
+
+/* Cards grid */
+.charity-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    justify-items: center;
+    background-color: aquamarine;
+}
+
+/* Ensure each card has a good width */
+.charity-card {
+    background-color: #f0fdfa;
+    /* Light minty */
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.07);
+    padding: 20px;
+    width: 100%;
+    max-width: 280px;
+    text-align: left;
+    transition: transform 0.3s ease;
+}
+
+/* Hover effect */
+.charity-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.15);
+}
+
+/* Text styling inside cards */
+.charity-card h3 {
+    margin-top: 0;
+    color: #1abc9c;
+}
+
+.charity-card p {
+    margin: 8px 0;
+    font-size: 0.95rem;
+    color: #333;
+}
+
+.charity-card .story {
+    font-style: italic;
+    color: #555;
+}
+
+.card-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.card-buttons button {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #1abc9c;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.card-buttons button:hover {
+    background-color: #16a085;
+}
+
+/* Responsive Layout Adjustments */
+@media (max-width: 1200px) {
+    .charity-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 900px) {
+    .charity-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .charity-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .charity-card {
+        max-width: 100%;
+    }
+}
+
+
+/* Responsive */
+
+/* popup */
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.popup-form {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 12px;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    position: relative;
+}
+
+.popup-form h2 {
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+.popup-form label {
+    display: block;
+    margin-top: 10px;
+    color: #333;
+    font-weight: 500;
+}
+
+.popup-form input,
+.popup-form textarea {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+.popup-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.popup-buttons button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.popup-buttons button[type="submit"] {
+    background-color: #1abc9c;
+    color: white;
+}
+
+.popup-buttons button[type="button"] {
+    background-color: #ccc;
+}
+
+/* edit pop up styling */
+#editCharityPopup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+    overflow: auto;
+    padding: 20px;
+}
+
+/* Form container */
+#editCharityForm {
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px 30px;
+    max-width: 600px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Input styling */
+#editCharityForm input,
+#editCharityForm textarea {
+    width: 100%;
+    margin-bottom: 14px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+}
+
+/* Label styling */
+#editCharityForm label {
+    font-weight: bold;
+    margin-bottom: 4px;
+    display: block;
+    color: #333;
+}
+
+/* Buttons */
+.popup-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.popup-buttons button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    background-color: #4CAF50;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.popup-buttons button:hover {
+    background-color: #388e3c;
+}
+
+.popup-buttons button[type="button"] {
+    background-color: #f44336;
+}
+
+.popup-buttons button[type="button"]:hover {
+    background-color: #c62828;
+}
+
+/* Responsive tweaks */
+@media (max-width: 600px) {
+    #editCharityForm {
+        padding: 15px;
+        max-height: 95vh;
+    }
+
+    .popup-buttons {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .popup-buttons button {
+        width: 100%;
+    }
+}
+
+
+#chartHeaderDiv h2 {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #ffffff;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
+    animation: glow 2s ease-in-out infinite alternate;
+    letter-spacing: 1px;
+}
+
+/* Add a soft glowing animation effect */
+@keyframes glow {
+    from {
+        text-shadow: 0 0 5px #ffffff, 0 0 10px #21cbf3, 0 0 15px #21cbf3;
+    }
+
+    to {
+        text-shadow: 0 0 10px #ffffff, 0 0 20px #2196f3, 0 0 25px #2196f3;
+    }
+}
+
+#chartSectionDiv {
+    background: linear-gradient(135deg, #e0f7fa, #f0f4c3);
+    padding: 2rem;
+    margin: 2rem auto;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 1s ease-in-out;
+    max-width: 1000px;
+    width: 90%;
+}
+
+#chartHeaderDiv {
+    text-align: center;
+    margin-bottom: 1rem;
+    background: linear-gradient(to right, #2196f3, #21cbf3);
+    padding: 1rem;
+    border-radius: 12px;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+    animation: slideDown 0.8s ease;
+}
+
+#chartDiv {
+    background: white;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: scaleIn 1s ease-in-out;
+    overflow-x: auto;
+}
+
+#barChart {
+    width: 100% !important;
+    max-width: 800px;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@media (max-width: 600px) {
+    #barChart {
+        width: 100% !important;
+    }
+
+    #chartDiv {
+        padding: 1rem;
+    }
+
+    #chartHeaderDiv {
+        font-size: 1.2rem;
+    }
+}
+
+.popup {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.popup-success {
+    background-color: #2ecc71;
+}
+
+.popup-error {
+    background-color: #e74c3c;
+}
