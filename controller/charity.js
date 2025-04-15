@@ -236,7 +236,8 @@ exports.createOrder = async (req, res) => {
             orderid: razorpayOrder.id,
             status: 'PENDING',
             userId: req.user._id,
-            charityId: charityId
+            charityId: charityId,
+            amount: amount
         })
         await newOrder.save();
         console.log("Order saved to DB:", newOrder);

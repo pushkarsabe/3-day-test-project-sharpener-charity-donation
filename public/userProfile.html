@@ -71,18 +71,45 @@
 
 
     <section id="userTotalDonationSection">
-        <div>
-            <h2>Total doantion</h2>
-
+        <div class="donation-header">
+            <h2>Your Total Donations</h2>
+        </div>
+        <div id="userTotalDonations" class="donation-content">
+            <!-- Dynamically inserted donation cards/items will go here -->
         </div>
     </section>
 
-    <section id="userDonationSection">
-        <div>
-            <h2>User doantion records</h2>
 
+    <section id="userDonationRecordSection">
+        <div id="userDonationRecordsHeader">
+            <h2>User Donation Records</h2>
+        </div>
+
+        <div id="recordButtonDiv">
+            <button id="showDonationRecordBtn">Show Donations</button>
+            <button id="hideDonationRecordBtn" style="display: none;">Hide Donations</button>
+        </div>
+
+        <div id="donationTableContainer">
+            <table id="donationRecordsTable" style="display: none;">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Charity</th>
+                        <th>Date</th>
+                        <th>Payment ID</th>
+                        <th>Status</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Records will be inserted dynamically here -->
+                </tbody>
+            </table>
         </div>
     </section>
+
+
 
     <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

@@ -33,7 +33,8 @@ exports.donateMoney = async (req, res, next) => {
         const userOrder = await Order.create({
             orderid: order.id,
             status: 'PENDING',
-            userId: req.user._id
+            userId: req.user._id,
+            amount: amount
         });
         console.log('userOrder = ' + userOrder);
 
@@ -105,3 +106,24 @@ exports.updateTransactionStatus = async (req, res, next) => {
         return res.status(500).json({ success: false, message: 'Transaction Failed' });
     }
 };
+
+exports.getAllOrdersData = async (req, res) => {
+    try {
+        console.log("getAllOrdersData");
+        let userid = req.user._id;
+        console.log('userid = ' + userid);
+
+        let allOrderData = await Order.find({
+            userId: userid,
+            status: 'SUCCESSFUL'
+        }).populate('charityId', 'name');
+
+        console.log('allOrderData = ' + allOrderData);
+
+        res.status(200).json({ message: 'success', allOrderData: allOrderData });
+    }
+    catch (err) {
+        console.error('getAllOrdersData error:', err);
+        res.status(500).json({ message: 'Failed to get all orders data' });
+    }
+}

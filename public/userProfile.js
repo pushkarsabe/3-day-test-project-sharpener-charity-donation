@@ -46,8 +46,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             console.log('response:', response.data.singleUserData);
             showPopup('Fetched user data', 'success');
 
-
-            const { name, email, phoneNumber } = response.data.singleUserData;
+            const { name, email, phoneNumber, donations } = response.data.singleUserData;
             document.getElementById('name').textContent = name;
             document.getElementById('email').textContent = email;
             document.getElementById('phone').textContent = phoneNumber;
@@ -57,6 +56,16 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (userProfileDiv) {
                 userProfileDiv.textContent = `Hello, ${name}`;
             }
+
+            // also display the total donations here
+            const userTotalDonations = document.getElementById('userTotalDonations');
+
+            userTotalDonations.innerHTML = `
+                    <div class="donation-card">
+                        <h3>Total Donations</h3>
+                        <p>₹${donations.toLocaleString()}</p>
+                    </div>
+                `;
 
         } else {
             console.error('Failed to fetch user data');
@@ -68,6 +77,84 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
 })
+
+document.getElementById('showDonationRecordBtn').addEventListener('click', async () => {
+    console.log('showDonationRecordBtn called');
+
+    const token = localStorage.getItem('token');
+    console.log('token:', token);
+
+    if (!token) {
+        showPopup('Token not found', 'error');
+        console.error('Token not found');
+        return;
+    }
+
+    try {
+        const response = await axios.get(`http://localhost:5000/purchase/getOrderData/`, {
+            headers: { Authorization: token }
+        });
+
+        const orders = response.data.allOrderData;
+        console.log('res:', orders);
+
+        displayOrders(orders);
+
+        // Make the table visible
+        const table = document.getElementById('donationRecordsTable');
+
+        if (table) {
+            table.style.display = 'table'; // or 'block' depending on your CSS
+        }
+    } catch (err) {
+        console.error('Error fetching order data:', err);
+    }
+});
+
+
+document.getElementById('hideDonationRecordBtn').addEventListener('click', () => {
+    document.getElementById('donationRecordsTable').style.display = 'none'; // Hide table after clicking on hide donations
+    document.getElementById('hideDonationRecordBtn').style.display = 'none'; // Hide dhide records button
+});
+
+
+function displayOrders(orders) {
+    console.log('displayOrders called');
+    console.log('orders:', orders);
+
+    const tableBody = document.querySelector('#donationRecordsTable tbody');
+    tableBody.innerHTML = ''; // Clear existing rows
+
+    if (!orders || orders.length === 0) {
+
+        showPopup('No donation records found', 'error');
+        tableBody.innerHTML = '<tr><td colspan="3">No donation records found.</td></tr>';
+        return;
+    }
+
+    orders.forEach((order, index) => {
+        const row = document.createElement('tr');
+
+        // Format date
+        const date = new Date(order.createdAt).toLocaleDateString('en-IN', {
+            day: 'numeric', month: 'short', year: 'numeric'
+        });
+
+        row.innerHTML = `
+            <td>${index + 1}</td>
+            <td>${order.charityId?.name || 'N/A'}</td>
+            <td>${date}</td>
+            <td>${order.paymentid}</td>
+            <td>${order.status}</td>
+            <td>${order.amount ?? 'N/A'}</td>
+        `;
+
+        tableBody.appendChild(row);
+    });
+
+    document.getElementById('hideDonationRecordBtn').style.display = 'inline-block'; // or 'block'
+}
+
 
 document.getElementById('editProfileBtn').addEventListener('click', edit);
 

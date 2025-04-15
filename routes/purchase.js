@@ -9,4 +9,7 @@ router.post('/donate', authUser, purchaseController.donateMoney);
 //update the order transaction status after the payment
 router.post('/updatetransactionstatus', authUser, purchaseController.updateTransactionStatus);
 
+//to get all the orders data
+router.get('/getOrderData', authUser, purchaseController.getAllOrdersData);
+
 module.exports = router;
