@@ -176,21 +176,53 @@ nav li {
     border-radius: 5px;
 }
 
+
+/* charity cards css */
 .cards-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
-    padding: 20px;
-    max-width: 1200px;
+    gap: 30px;
+    padding: 40px 20px;
+    max-width: 1400px;
     margin: auto;
+    background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+    border-radius: 20px;
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.05);
 }
 
+/* Individual card styling */
 .card {
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: linear-gradient(to bottom right, #ffffff, #f0f4f8);
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
+    animation: shine 3s infinite linear;
+}
+
+@keyframes shine {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 .card:hover {
@@ -199,13 +231,53 @@ nav li {
 }
 
 .card h3 {
-    margin-bottom: 10px;
-    color: #2c3e50;
+    margin-bottom: 12px;
+    color: #2d3436;
+    font-size: 22px;
 }
 
 .card p {
-    color: #555;
-    font-size: 14px;
+    color: #444;
+    font-size: 15px;
+    margin: 6px 0;
+}
+
+/* Donate button with animations */
+.card button {
+    margin-top: 20px;
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #00b894, #00cec9);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.4s ease, transform 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.card button::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -75%;
+    width: 50%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    transform: skewX(-25deg);
+    transition: left 0.5s ease;
+}
+
+.card button:hover::after {
+    left: 125%;
+}
+
+.card button:hover {
+    background: linear-gradient(135deg, #0984e3, #6c5ce7);
+    transform: scale(1.05);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
 @media screen and (max-width: 768px) {
@@ -218,6 +290,7 @@ nav li {
         width: 100%;
     }
 }
+
 
 .popup {
     position: fixed;
@@ -356,4 +429,75 @@ footer {
         font-size: 1.5rem;
     }
 
+}
+
+
+
+/* donation popup css */
+/* Modal styling */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.modal-content {
+    background: #fff;
+    margin: 10% auto;
+    padding: 30px;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    position: relative;
+    text-align: center;
+}
+
+.modal-content h3 {
+    margin-bottom: 20px;
+    color: #2d3436;
+}
+
+.modal-content input {
+    width: 80%;
+    padding: 10px;
+    font-size: 16px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: space-around;
+}
+
+.modal-actions button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 50px;
+    font-weight: bold;
+    cursor: pointer;
+    background: linear-gradient(135deg, #00b894, #00cec9);
+    color: white;
+    transition: transform 0.3s ease;
+}
+
+.modal-actions button:hover {
+    transform: scale(1.05);
+    background: linear-gradient(135deg, #6c5ce7, #0984e3);
+}
+
+.close-btn {
+    position: absolute;
+    right: 20px;
+    top: 10px;
+    font-size: 24px;
+    cursor: pointer;
 }

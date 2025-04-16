@@ -93,8 +93,8 @@ function displayCharityCards(data) {
                 <p><strong>Phone:</strong> ${charity.phoneNumber || 'N/A'}</p>
                 <p class="story">${charity.storyForFundraising || ''}</p>
                 <div class="card-buttons">
-                    <button onclick="donateMoney('${charity._id}')">Donate Money</button>
-                    <button onclick="editCharity('${charity._id}')">Edit Charity</button>
+                <button onclick="openDonationModal('${charity._id}')">Donate Money</button>
+                <button onclick="editCharity('${charity._id}')">Edit Charity</button>
                 </div>
             `;
             container.appendChild(card);
@@ -102,9 +102,37 @@ function displayCharityCards(data) {
     });
 }
 
+let selectedCharityId = null; // Global to track charity
 
-async function donateMoney(charityId) {
+function openDonationModal(charityId) {
+    selectedCharityId = charityId;
+    document.getElementById('donationModal').style.display = 'block';
+}
+
+function closeModal() {
+    document.getElementById('donationModal').style.display = 'none';
+    document.getElementById('donationAmountInput').value = '';
+}
+
+
+document.getElementById('donateNowBtn').addEventListener('click', async () => {
+    const amountInput = document.getElementById('donationAmountInput');
+    const donationAmount = parseFloat(amountInput.value);
+
+    if (isNaN(donationAmount) || donationAmount <= 0) {
+        // alert("Please enter a valid donation amount.");
+        showPopup('Please enter a valid donation amount', 'error');
+        return;
+    }
+
+    closeModal(); // Close modal before payment
+    await donateMoney(selectedCharityId, donationAmount);
+});
+
+
+async function donateMoney(charityId, donationAmount) {
     console.log('inside donateMoney of donatekart and donate clicked for:', charityId);
+    console.log('donationAmount:', donationAmount);
 
     const token = localStorage.getItem('token');
     console.log('token:', token);
@@ -113,22 +141,6 @@ async function donateMoney(charityId) {
         console.error('Token not found');
         return;
     }
-
-    const amount = prompt("Enter the amount you wish to donate (in ₹):");
-
-    if (amount === null) {
-        console.log('Donation canceled');
-        showPopup('Donation canceled', 'success');
-        return;
-    }
-
-    const donationAmount = parseFloat(amount);
-
-    if (isNaN(donationAmount) || donationAmount <= 0) {
-        alert("Please enter a valid donation amount.");
-        return;
-    }
-    console.log(`Donating ₹${donationAmount} to charity ID: ${charityId}`);
 
     try {
         const orderResponse = await axios.post('http://localhost:5000/charity/create-order', {

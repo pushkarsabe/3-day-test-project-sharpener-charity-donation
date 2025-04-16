@@ -1,5 +1,8 @@
 console.log('user profile js file');
 
+//for saving oders data for downlaoding it
+let donationRecordsDownload = null;
+
 function showPopup(message, type = 'success') {
     const popup = document.createElement('div');
     popup.textContent = message;
@@ -33,7 +36,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         setTimeout(() => {
             window.location.href = "/login.html"
         }, 2000)
-        return; 
+        return;
     }
 
     try {
@@ -47,7 +50,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (response.data.message === 'success') {
             console.log('response:', response.data.singleUserData);
-            showPopup('Fetched user data', 'success');
+            // showPopup('Fetched user data', 'success');   
 
             const { name, email, phoneNumber, donations } = response.data.singleUserData;
             document.getElementById('name').textContent = name;
@@ -65,7 +68,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             userTotalDonations.innerHTML = `
                     <div class="donation-card">
-                        <h3>Total Donations</h3>
+                        <h3>Your Contribution</h3>
                         <p>₹${donations.toLocaleString()}</p>
                     </div>
                 `;
@@ -75,11 +78,20 @@ document.addEventListener('DOMContentLoaded', async () => {
             showPopup('Failed to fetch user data', 'error');
 
         }
+        //fetch the doantion records for downaloding
+        const res = await axios.get(`http://localhost:5000/purchase/getOrderData/`, {
+            headers: { Authorization: token }
+        });
+        const orders = res.data.allOrderData;
+        //set the variable
+        donationRecordsDownload = orders;
+
     } catch (err) {
         console.error('Error fetching charity data:', err);
     }
 
 })
+
 
 document.getElementById('showDonationRecordBtn').addEventListener('click', async () => {
     console.log('showDonationRecordBtn called');
@@ -100,7 +112,7 @@ document.getElementById('showDonationRecordBtn').addEventListener('click', async
 
         const orders = response.data.allOrderData;
         console.log('res:', orders);
-
+        //display the records
         displayOrders(orders);
 
         // Make the table visible
@@ -159,6 +171,45 @@ function displayOrders(orders) {
 }
 
 
+function downloadCharityData() {
+    console.log('displayOrders called');
+    console.log('donationRecordsDownload:', donationRecordsDownload);
+
+    if (!donationRecordsDownload || donationRecordsDownload.length === 0) {
+        showPopup('No data to download', 'error');
+        return;
+    }
+
+    const filteredData = donationRecordsDownload.map(record => {
+        const {
+            paymentid,
+            _id,
+            userId,
+            updatedAt,
+            charityId,
+            ...rest
+        } = record;
+
+        return {
+            ...rest,
+            charityId: {
+                name: charityId?.name || 'Unknown'
+            }
+        };
+    });
+    console.log('filteredData:', filteredData);
+
+    const blob = new Blob([JSON.stringify(filteredData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'charity_data.json';
+    a.click();
+
+}//downloadCharityData
+
+
+//edit section
 document.getElementById('editProfileBtn').addEventListener('click', edit);
 
 const editBtn = document.getElementById('editProfileBtn');

@@ -53,9 +53,24 @@
         <input type="text" id="searchCategory" placeholder="Filter by Category">
     </div>
 
+
     <div class="cards-container" id="charityCards">
 
     </div>
+    <!-- Donation Modal -->
+    <div id="donationModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h3>Enter Donation Amount (₹)</h3>
+            <input type="number" id="donationAmountInput" placeholder="Enter amount..." min="1" />
+            <div class="modal-actions">
+                <button id="donateNowBtn">Donate</button>
+                <button onclick="closeModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+
 
     <!-- About Section -->
     <div id="aboutDiv">
