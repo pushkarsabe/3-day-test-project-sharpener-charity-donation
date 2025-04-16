@@ -184,7 +184,7 @@ exports.getCharityByFilter = async (req, res) => {
         console.error('filter:', filter);
 
         const charities = await Charity.find(filter);
-        console.log('Filtered charities:', charities);
+        // console.log('Filtered charities:', charities);
 
         res.status(200).json({ message: 'success', charityByFilter: charities });
     }
@@ -305,7 +305,7 @@ exports.updateDonationAmount = async (req, res) => {
         let email = user.email;
         console.log("email = ", email);
         console.log('amount :', amount);
-        await sendEmail(email, amount);
+        await sendEmail(email, amount, charity.name, charity.phoneNumber, charity.category, charity.beneficiaryLocationCity);
 
         return res.status(200).json({ message: "Donation recorded successfully." });
 

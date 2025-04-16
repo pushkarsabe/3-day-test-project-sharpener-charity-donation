@@ -151,26 +151,6 @@ nav li {
     border-radius: 10px;
 }
 
-.donate-button {
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #ffb703;
-    color: black;
-    padding: 0.75rem 1.5rem;
-    font-size: 1.2rem;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background 0.3s;
-}
-
-.donate-button:hover {
-    background-color: #ff9900;
-}
-
-
 #donationMessage {
     background: linear-gradient(to right, #eceff1, #f5f5f5);
     padding: 60px 20px;
