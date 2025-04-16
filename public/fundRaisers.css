@@ -6,8 +6,17 @@
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f2f6f9;
+    color: #333;
+    scroll-behavior: smooth;
 }
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
 
 /* Navbar styles */
 .navbar {
@@ -20,9 +29,11 @@ body {
     flex-wrap: wrap;
 }
 
-.logo {
-    font-size: 1.5rem;
-    font-weight: bold;
+nav {
+    background-color: #0d6efd;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: flex-end;
 }
 
 .nav-links {
@@ -30,6 +41,12 @@ body {
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
+}
+
+nav li {
+    list-style: none;
+    display: inline;
+    margin-left: 1rem;
 }
 
 .nav-links li button {
@@ -48,6 +65,8 @@ body {
     color: #ffb703;
     transform: scale(1.05);
 }
+
+
 
 /* Wrap nav and profile together */
 .nav-profile-container {
@@ -138,11 +157,14 @@ body {
     margin-bottom: 30px;
 }
 
+#charityFormDiv {
+    background: linear-gradient(135deg, #f8f9fa, #e3f2fd);
+}
 
 form {
     max-width: 800px;
     margin: auto;
-    background: white;
+    background: antiquewhite;
     padding: 30px;
     border-radius: 10px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);

@@ -29,7 +29,7 @@ document.getElementById('donateMoney').onclick = async (e) => {
     console.log('token:' + token);
     if (!token) {
         console.error('Token not found');
-        showPopup('Token not found', 'error');
+        showPopup('Token not found: Please log in first.', 'error');
         return;
     }
     const amount = prompt("Enter the amount you wish to donate (in ₹):");
@@ -121,8 +121,11 @@ window.addEventListener('DOMContentLoaded', async () => {
     console.log('token:' + token);
 
     if (!token) {
-        showPopup('Token not found', 'error');
+        showPopup('Access denied: Please log in first.', 'error');
         console.error('Token not found');
+        setTimeout(() => {
+            window.location.href = "/login.html"
+        }, 2000)
         return;
     }
 

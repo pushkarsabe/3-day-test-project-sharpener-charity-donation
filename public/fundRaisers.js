@@ -12,13 +12,17 @@ const showPopup = (message, isSuccess = true) => {
     }, 2000);
 };
 
-document.addEventListener('DOMContentLoaded', async() => {
+document.addEventListener('DOMContentLoaded', async () => {
     console.log('inside DOMContentLoaded ');
     const token = localStorage.getItem('token');
     // console.error('token:', token);
 
     if (!token) {
-        showPopup('User not authenticated!', false);
+        showPopup('Access denied: Please log in first.', false);
+        console.error('Token not found');
+        setTimeout(() => {
+            window.location.href = "/login.html"
+        }, 2000)
         return;
     }
     try {

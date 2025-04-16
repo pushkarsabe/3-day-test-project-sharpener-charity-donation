@@ -28,8 +28,11 @@ window.addEventListener('DOMContentLoaded', async () => {
     console.log('token:', token);
 
     if (!token) {
-        showPopup('Token not found', 'error');
+        showPopup('Access denied: Please log in first.', 'error');
         console.error('Token not found');
+        setTimeout(() => {
+            window.location.href = "/login.html"
+        }, 2000)
         return;
     }
 
